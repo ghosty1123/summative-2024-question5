@@ -27,8 +27,11 @@ jobs:
     - name: Build with dotnet
       run: dotnet build ./eShopOnWeb.sln --configuration Release
 
-    - name: Lint with dotnet format
-      run: dotnet format ./eShopOnWeb.sln --verify-no-changes
+    - name: Format with dotnet
+      run: dotnet format ./eShopOnWeb.sln
+
+    - name: Verify no changes with dotnet format
+      run: dotnet format ./eShopOnWeb.sln --verify-no-changes --verbosity diagnostic
 
     - name: Test with dotnet
       run: dotnet test ./eShopOnWeb.sln --configuration Release --logger "trx;LogFileName=test_results.trx"
