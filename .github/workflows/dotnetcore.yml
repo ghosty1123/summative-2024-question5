@@ -1,7 +1,6 @@
 name: eShopOnWeb Build and Test
 
-#Triggers (uncomment line below to use it)
-#on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
@@ -10,14 +9,35 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
         dotnet-quality: 'preview'
 
+    - name: Cache .NET packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/eShopOnWeb.sln') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Build with dotnet
       run: dotnet build ./eShopOnWeb.sln --configuration Release
-    
+
+    - name: Format with dotnet
+      run: dotnet format ./eShopOnWeb.sln
+
+    - name: Verify no changes with dotnet format
+      run: dotnet format ./eShopOnWeb.sln --verify-no-changes --verbosity diagnostic
+
     - name: Test with dotnet
-      run: dotnet test ./eShopOnWeb.sln --configuration Release
+      run: dotnet test ./eShopOnWeb.sln --configuration Release --logger "trx;LogFileName=test_results.trx"
+
+    - name: Publish Test Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: '**/*.trx'
