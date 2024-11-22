@@ -17,8 +17,9 @@ jobs:
     - name: Build with dotnet
       run: dotnet build ./Everything.sln --configuration Release /bl
 
-    - uses: microsoft/RichCodeNavIndexer@v0.1
+    - name: Index with Rich Code Navigation
+      uses: microsoft/RichCodeNavIndexer@v0.1
       with:
-        repo-token: ${{ github.token }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
         languages: 'csharp'
         environment: 'internal'
