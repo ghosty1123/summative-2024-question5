@@ -28,7 +28,7 @@ jobs:
       run: dotnet build ./eShopOnWeb.sln --configuration Release
 
     - name: Lint with dotnet format
-      run: dotnet format ./eShopOnWeb.sln --check
+      run: dotnet format ./eShopOnWeb.sln --verify-no-changes
 
     - name: Test with dotnet
       run: dotnet test ./eShopOnWeb.sln --configuration Release --logger "trx;LogFileName=test_results.trx"
